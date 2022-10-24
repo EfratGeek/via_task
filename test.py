@@ -2,14 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from time import sleep
-from selenium.webdriver.remote.webelement import WebElement
-
-
-class product:
-    def __init__(self, idp, name, price):
-        self.name = name
-        self.price = price
-        self.id = idp
 
 
 def find_nexus(driver):
@@ -31,7 +23,6 @@ def find_nexus(driver):
     for i in products:
         sleep(1)
         if i.text == 'Nexus 6':
-            # idp_in_link = i.get_property('href')
             i.click()
             break
     sleep(5)
@@ -45,18 +36,18 @@ def find_nexus(driver):
     move_cart = driver.find_element(By.ID, "cartur")
     move_cart.click()
     sleep(5)
-    # driver.close()
-
-
-def add_prod_to_cart(driver, link):
-    sleep(10)
-    # driver.get(link)
+    rows = driver.find_elements(By.XPATH, '//div/table/tbody/tr')
+    if len(rows) > 1:
+        return False
+    prod = rows[0].find_elements(By.XPATH, '//td')
+    if (id_ == '3') & (prod[1].text == 'Nexus 6') & (prod[2].text == '650'):
+        return True
+    return False
 
 
 if __name__ == '__main__':
     driver: WebDriver = webdriver.Chrome(executable_path="C:\\Users\\User\pythonProject\driver\chromedriver.exe")
-    find_nexus(driver)
-
-    # l_ = driver.current_url
-    # print(l_)
-    # driver.close()
+    print('If section e\' is met?')
+    res = find_nexus(driver)
+    print(res)
+    driver.close()
