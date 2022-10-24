@@ -1,6 +1,23 @@
 import requests
 import base64
+
 s = '123456789'
-EncodedString = base64.b64encode(s.encode('utf-8'))
-res = requests.post(url='https://www.demoblaze.com//login', data={"username": 'Efrat0000', "password": EncodedString}, verify=False)
-print(res)
+EncodedString = base64.b64encode(bytes(s, 'utf-8')).decode('utf-8')
+res1 = requests.post(url='https://api.demoblaze.com/login', json={"username": 'Efrat0000', "password": EncodedString},
+                     verify=False)
+j1 = res1.json()
+tok = str(j1).split(': ')[1]
+res = requests.post(url='https://api.demoblaze.com/viewcart',
+                    json={'cookie': tok, 'flag': 'true'},
+                    verify=False)
+json_ = res.json()
+if len(json_["Items"]) != 1:
+    raise Exception
+id_ = json_["Items"][0]["prod_id"]
+res = requests.post(url='https://api.demoblaze.com/view', json={"id": id_},
+                    verify=False)
+j2 = res.json()
+if (j2['price'] == 650.0) & (j2['title'] == 'Nexus 6') & (j2['id'] == 3):
+    print('good!!')
+else:
+    raise Exception
